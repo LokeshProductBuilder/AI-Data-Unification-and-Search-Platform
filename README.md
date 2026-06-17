@@ -1,5 +1,8 @@
 # Unified
 
+[![CI](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 A personal data platform. Connect Gmail and Outlook, pull your email, and search it with natural language powered by Claude.
 
 ![Unified dashboard — AI search over Gmail + Outlook with cited sources](docs/dashboard.png)

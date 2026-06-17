@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SearchCitation } from "@/types";
 import { ProviderBadge } from "@/components/provider-badge";
 import { formatEmailDate, displaySender } from "@/lib/format";
@@ -19,6 +19,26 @@ export function SearchBar() {
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // Keyboard shortcuts: "/" or ⌘K / Ctrl+K focuses search, Esc blurs it.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const typing =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+
+      if (((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") || (e.key === "/" && !typing)) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      } else if (e.key === "Escape" && document.activeElement === inputRef.current) {
+        inputRef.current?.blur();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const run = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,6 +110,11 @@ export function SearchBar() {
             className="min-w-0 flex-1 bg-transparent text-sm text-fg placeholder:text-fg-faint focus:outline-none"
             autoComplete="off"
           />
+          {!open && query.length === 0 && (
+            <kbd className="pointer-events-none hidden shrink-0 items-center gap-0.5 rounded border border-border bg-bg-overlay px-1.5 py-0.5 font-mono text-2xs text-fg-subtle sm:inline-flex">
+              ⌘K
+            </kbd>
+          )}
           {open && (
             <button
               type="button"

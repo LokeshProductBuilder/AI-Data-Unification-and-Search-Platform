@@ -39,10 +39,13 @@ export function encrypt(plaintext: string): string {
 
 export function decrypt(payload: string): string {
   const key = getKey();
-  const [ivB64, tagB64, dataB64] = payload.split(".");
-  if (!ivB64 || !tagB64 || !dataB64) {
+  const parts = payload.split(".");
+  // Must be exactly iv.tag.ciphertext; iv and tag are always present, but the
+  // ciphertext segment can legitimately be empty (e.g. an empty plaintext).
+  if (parts.length !== 3 || !parts[0] || !parts[1]) {
     throw new Error("Malformed encrypted payload.");
   }
+  const [ivB64, tagB64, dataB64] = parts;
   const decipher = crypto.createDecipheriv(
     ALGORITHM,
     key,

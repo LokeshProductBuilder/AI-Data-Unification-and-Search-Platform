@@ -109,3 +109,16 @@ Generate the token encryption key:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
+
+## Testing
+
+Unit tests run with [Vitest](https://vitest.dev) and cover the security- and
+correctness-critical pure functions (AES-256-GCM token encryption, date/sender
+formatting, and pgvector serialization):
+
+```bash
+npm test          # run once
+npm run test:watch
+```
+
+Tests also run on every push and pull request via GitHub Actions.

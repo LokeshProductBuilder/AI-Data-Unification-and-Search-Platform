@@ -14,6 +14,7 @@ done and what's next.
 - [x] Semantic search: pgvector top-20 + streaming Claude answers with citations
 - [x] CI (lint, type-check, build) + Docker Compose for local Postgres
 - [x] Keyboard shortcuts for search (`/`, `⌘K`, `Esc`)
+- [x] Unit tests (Vitest) for `crypto`, `format`, and vector serialization
 
 ## Next up
 
@@ -22,7 +23,6 @@ done and what's next.
 - [ ] Account settings: disconnect a mailbox, delete its emails
 - [ ] Search history and saved searches
 - [ ] Incremental sync (only fetch messages newer than the last sync)
-- [ ] Unit tests for `crypto`, `format`, and the search ranking
 - [ ] Highlight cited emails (`[n]`) inline in the answer
 - [ ] Rate limiting on the search endpoint
 

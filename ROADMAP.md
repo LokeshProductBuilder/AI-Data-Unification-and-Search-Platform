@@ -15,10 +15,10 @@ done and what's next.
 - [x] CI (lint, type-check, build) + Docker Compose for local Postgres
 - [x] Keyboard shortcuts for search (`/`, `⌘K`, `Esc`)
 - [x] Unit tests (Vitest) for `crypto`, `format`, and vector serialization
+- [x] Email detail view (slide-over drawer with full message)
 
 ## Next up
 
-- [ ] Email detail / thread view
 - [ ] Loading skeletons + polished empty states
 - [ ] Account settings: disconnect a mailbox, delete its emails
 - [ ] Search history and saved searches

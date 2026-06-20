@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Provider } from "@prisma/client";
 import type { EmailListItem } from "@/types";
 import { ProviderBadge } from "@/components/provider-badge";
+import { EmailDetail } from "@/components/email-detail";
 import { formatEmailDate, formatFullDate, displaySender } from "@/lib/format";
 
 type Filter = "ALL" | Provider;
@@ -20,6 +21,7 @@ export function EmailList({ initialTotal }: { initialTotal: number }) {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<Filter>("ALL");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const sentinel = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(
@@ -98,31 +100,36 @@ export function EmailList({ initialTotal }: { initialTotal: number }) {
 
       <ul className="divide-y divide-border-subtle">
         {emails.map((email) => (
-          <li
-            key={email.id}
-            className="group flex items-center gap-3 px-4 py-2 transition-colors hover:bg-bg-subtle"
-          >
-            <ProviderBadge provider={email.provider} className="shrink-0" />
-            <span
-              className={`w-44 shrink-0 truncate text-sm ${
-                email.isRead ? "text-fg-muted" : "font-semibold text-fg"
+          <li key={email.id}>
+            <button
+              type="button"
+              onClick={() => setSelectedId(email.id)}
+              className={`group flex w-full items-center gap-3 px-4 py-2 text-left transition-colors hover:bg-bg-subtle ${
+                selectedId === email.id ? "bg-bg-subtle" : ""
               }`}
             >
-              {displaySender(email.fromName, email.fromEmail)}
-            </span>
-            <span className="min-w-0 flex-1 truncate text-sm">
-              <span className={email.isRead ? "text-fg" : "font-semibold text-fg"}>
-                {email.subject || "(no subject)"}
+              <ProviderBadge provider={email.provider} className="shrink-0" />
+              <span
+                className={`w-44 shrink-0 truncate text-sm ${
+                  email.isRead ? "text-fg-muted" : "font-semibold text-fg"
+                }`}
+              >
+                {displaySender(email.fromName, email.fromEmail)}
               </span>
-              <span className="ml-2 text-fg-subtle">{email.snippet}</span>
-            </span>
-            <time
-              dateTime={email.receivedAt}
-              title={formatFullDate(email.receivedAt)}
-              className="shrink-0 font-mono text-2xs tabular-nums text-fg-subtle"
-            >
-              {formatEmailDate(email.receivedAt)}
-            </time>
+              <span className="min-w-0 flex-1 truncate text-sm">
+                <span className={email.isRead ? "text-fg" : "font-semibold text-fg"}>
+                  {email.subject || "(no subject)"}
+                </span>
+                <span className="ml-2 text-fg-subtle">{email.snippet}</span>
+              </span>
+              <time
+                dateTime={email.receivedAt}
+                title={formatFullDate(email.receivedAt)}
+                className="shrink-0 font-mono text-2xs tabular-nums text-fg-subtle"
+              >
+                {formatEmailDate(email.receivedAt)}
+              </time>
+            </button>
           </li>
         ))}
       </ul>
@@ -139,6 +146,8 @@ export function EmailList({ initialTotal }: { initialTotal: number }) {
           Loading…
         </div>
       )}
+
+      <EmailDetail emailId={selectedId} onClose={() => setSelectedId(null)} />
     </section>
   );
 }

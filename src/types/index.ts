@@ -14,6 +14,21 @@ export interface EmailListItem {
   isRead: boolean;
 }
 
+/** Full email content for the detail / thread view. */
+export interface EmailDetailItem {
+  id: string;
+  provider: Provider;
+  fromName: string | null;
+  fromEmail: string | null;
+  toEmails: string[];
+  subject: string | null;
+  bodyText: string | null;
+  snippet: string | null;
+  receivedAt: string; // ISO string
+  isRead: boolean;
+  labels: string[];
+}
+
 /** A normalised message as returned by a provider adapter before persistence. */
 export interface NormalizedEmail {
   externalId: string;

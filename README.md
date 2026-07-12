@@ -9,6 +9,12 @@ A personal data platform. Connect Gmail and Outlook, pull your email, and search
 
 > _Dashboard UI with sample data: a natural-language question is embedded, matched against your emails with a pgvector similarity search, and answered by Claude with citations back to the specific messages._
 
+## Product docs
+
+- [**Product Requirements Document (PRD)**](docs/PRD.md) — problem, users, goals, requirements, success metrics, and phasing.
+- [**Use cases**](docs/use-cases.md) — user stories, flows, and the edge cases considered.
+- [**Roadmap**](ROADMAP.md) — what's shipped and what's next.
+
 ## Stack
 
 | Concern         | Choice                                            |

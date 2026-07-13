@@ -14,7 +14,7 @@ done and what's next.
 - [x] Semantic search: pgvector top-20 + streaming Claude answers with citations
 - [x] CI (lint, type-check, build) + Docker Compose for local Postgres
 - [x] Keyboard shortcuts for search (`/`, `⌘K`, `Esc`)
-- [x] Unit tests (Vitest) for `crypto`, `format`, and vector serialization
+- [x] Unit tests (Vitest, 35 tests) — `crypto`, `format`, embeddings, `env`, semantic search wiring, token refresh, and the email-detail API (incl. user scoping)
 - [x] Email detail view (slide-over drawer with full message)
 
 ## Next up

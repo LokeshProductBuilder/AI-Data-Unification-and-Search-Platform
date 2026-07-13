@@ -1,9 +1,12 @@
 # Unify
 
+[![Live demo](https://img.shields.io/badge/Live%20demo-Try%20it-2563eb)](https://lokeshproductbuilder.github.io/AI-Data-Unification-and-Search-Platform/)
 [![CI](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A personal data platform. Connect Gmail and Outlook, pull your email, and search it with natural language powered by Claude.
+
+**[▶ Try the interactive demo](https://lokeshproductbuilder.github.io/AI-Data-Unification-and-Search-Platform/)** — a clickable front-end prototype with sample data (no sign-in required). The full stack (auth, OAuth, embeddings, vector search, streaming answers) lives in this repo.
 
 ## Product docs
 

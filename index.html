@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unify — interactive demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #08090a; --bg-subtle: #0c0d0f; --bg-raised: #121316; --bg-overlay: #16181c;
+        --border: #1f2125; --border-subtle: #191b1f; --border-strong: #2a2d33;
+        --fg: #e6e8eb; --fg-muted: #9ba1a8; --fg-subtle: #6b7178; --fg-faint: #474c52;
+        --accent: #3b82f6; --accent-bright: #4f9bff; --accent-hover: #1d6fff;
+        --gmail: #ea4335; --outlook: #0a84ff; --emerald: #34d399;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { background: var(--bg); color: var(--fg); font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+      ::selection { background: #1e3a8a; }
+      *::-webkit-scrollbar { width: 8px; height: 8px; }
+      *::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+
+      .demo-flag { background: linear-gradient(90deg, #0f1d3d, transparent);
+        border-bottom: 1px solid var(--border); padding: 5px 16px;
+        font-family: "JetBrains Mono"; font-size: 11px; color: var(--accent-bright); }
+      .demo-flag b { color: var(--fg); }
+
+      .topbar { height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--border); }
+      .brand { display: flex; align-items: center; gap: 8px; }
+      .logo { height: 10px; width: 10px; border-radius: 3px; background: var(--accent); box-shadow: 0 0 0 1px rgba(59,130,246,.4), 0 0 24px -4px rgba(59,130,246,.6); }
+      .brand-name { font-family: "JetBrains Mono"; font-size: 14px; font-weight: 500; }
+      .beta { margin-left: 4px; background: var(--bg-raised); color: var(--fg-subtle); font-family: "JetBrains Mono"; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+      .avatar { height: 28px; width: 28px; border-radius: 999px; background: linear-gradient(135deg, #1d6fff, #6d28d9); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; }
+
+      .accounts { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--bg-subtle); border-bottom: 1px solid var(--border); }
+      .acct { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--bg-raised); padding: 6px 10px; border-radius: 6px; }
+      .acct .email { color: var(--fg-muted); font-size: 11px; }
+      .badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 4px; padding: 2px 6px; font-family: "JetBrains Mono"; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; background: var(--bg-overlay); }
+      .badge.gmail { color: var(--gmail); box-shadow: inset 0 0 0 1px rgba(234,67,53,.3); }
+      .badge.outlook { color: var(--outlook); box-shadow: inset 0 0 0 1px rgba(10,132,255,.3); }
+      .dot { height: 6px; width: 6px; border-radius: 999px; }
+      .dot.gmail { background: var(--gmail); } .dot.outlook { background: var(--outlook); }
+      .status { font-family: "JetBrains Mono"; font-size: 11px; color: var(--emerald); }
+      .status .faint { color: var(--fg-faint); }
+      .spacer { margin-left: auto; display: flex; gap: 8px; }
+      .btn-ghost { border: 1px solid var(--border); background: var(--bg-raised); color: var(--fg-muted); font-family: "JetBrains Mono"; font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+      .btn-ghost.fg { color: var(--fg); }
+      .btn-ghost:hover { border-color: var(--border-strong); color: var(--fg); }
+
+      .search-wrap { background: var(--bg-subtle); border-bottom: 1px solid var(--border); padding: 12px 16px; }
+      .search-box { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); background: var(--bg-raised); padding: 10px 14px; border-radius: 10px; transition: border-color .15s, box-shadow .15s; }
+      .search-box:focus-within { border-color: rgba(59,130,246,.6); box-shadow: 0 0 0 1px rgba(59,130,246,.25), 0 0 24px -4px rgba(59,130,246,.35); }
+      .search-icon { color: var(--fg-subtle); display: flex; }
+      .search-box:focus-within .search-icon { color: var(--accent); }
+      #q { flex: 1; background: transparent; border: none; outline: none; color: var(--fg); font-size: 13px; font-family: inherit; }
+      #q::placeholder { color: var(--fg-faint); }
+      kbd { border: 1px solid var(--border); background: var(--bg-overlay); color: var(--fg-subtle); font-family: "JetBrains Mono"; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+      .ask-btn { background: var(--accent); color: #fff; border: none; font-family: "JetBrains Mono"; font-size: 11px; font-weight: 500; padding: 7px 13px; border-radius: 6px; cursor: pointer; }
+      .ask-btn:hover { background: var(--accent-hover); }
+      .ask-btn:disabled { opacity: .4; cursor: default; }
+
+      .answer-card { margin-top: 12px; border: 1px solid var(--border); background: var(--bg-raised); border-radius: 10px; display: none; }
+      .answer-card.open { display: block; animation: fade .15s ease-out; }
+      @keyframes fade { from { opacity: 0; transform: translateY(3px);} to {opacity:1; transform:none;} }
+      .answer-body { padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); }
+      .label { font-family: "JetBrains Mono"; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px; }
+      .label.accent { color: var(--accent-bright); } .label.subtle { color: var(--fg-subtle); }
+      #answerText { font-size: 13px; line-height: 1.6; color: var(--fg); white-space: pre-wrap; }
+      .cite { color: var(--accent-bright); font-weight: 600; }
+      .caret { display:inline-block; width:7px; height:15px; background:var(--accent); vertical-align:-2px; animation: blink 1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      .sources { padding: 12px 16px; }
+      .src-row { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 3px 0; cursor: pointer; }
+      .src-row:hover { color: var(--accent-bright); }
+      .src-num { width: 18px; text-align: right; font-family: "JetBrains Mono"; color: var(--fg-faint); }
+      .src-sender { width: 150px; color: var(--fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .src-subj { flex: 1; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .src-meta { font-family: "JetBrains Mono"; color: var(--fg-subtle); }
+
+      .inbox-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 10px 16px; }
+      .inbox-title { display: flex; align-items: center; gap: 8px; }
+      .filters { display: flex; gap: 2px; border: 1px solid var(--border); background: var(--bg-raised); padding: 2px; border-radius: 6px; }
+      .filter { font-family: "JetBrains Mono"; font-size: 11px; padding: 4px 8px; border-radius: 4px; color: var(--fg-muted); background: none; border: none; cursor: pointer; }
+      .filter.active { background: rgba(59,130,246,.15); color: var(--accent-bright); }
+
+      .row { display: flex; align-items: center; gap: 12px; padding: 8px 16px; border-bottom: 1px solid var(--border-subtle); width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; cursor: pointer; }
+      .row:hover { background: var(--bg-subtle); }
+      .row .sender { width: 176px; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .row .sender.unread { font-weight: 600; color: var(--fg); } .row .sender.read { color: var(--fg-muted); }
+      .row .mid { flex: 1; min-width: 0; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .row .subj { color: var(--fg); } .row .subj.unread { font-weight: 600; }
+      .row .snippet { color: var(--fg-subtle); margin-left: 8px; }
+      .row .date { font-family: "JetBrains Mono"; font-size: 11px; color: var(--fg-subtle); white-space: nowrap; }
+
+      .drawer-overlay { position: fixed; inset: 0; z-index: 50; display: none; }
+      .drawer-overlay.open { display: flex; justify-content: flex-end; }
+      .backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(2px); animation: fade .15s; }
+      .drawer { position: relative; height: 100%; width: 100%; max-width: 640px; background: var(--bg-raised); border-left: 1px solid var(--border); display: flex; flex-direction: column; animation: slidein .18s ease-out; }
+      @keyframes slidein { from { transform: translateX(20px); opacity: .6; } to { transform: none; opacity: 1; } }
+      .drawer-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 12px 20px; }
+      .drawer-close { background: none; border: none; color: var(--fg-subtle); font-family: "JetBrains Mono"; font-size: 11px; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+      .drawer-close:hover { background: var(--bg-overlay); color: var(--fg); }
+      .drawer-content { flex: 1; overflow-y: auto; padding: 16px 20px; }
+      .drawer-subject { font-size: 18px; font-weight: 600; line-height: 1.3; margin: 10px 0; }
+      .meta { border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 12px 0; margin: 8px 0 16px; font-family: "JetBrains Mono"; font-size: 11px; display: grid; gap: 6px; }
+      .meta-row { display: flex; gap: 12px; }
+      .meta-row dt { width: 48px; color: var(--fg-faint); text-transform: uppercase; }
+      .meta-row dd { color: var(--fg-muted); }
+      .body { font-size: 13px; line-height: 1.7; color: var(--fg-muted); white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div class="demo-flag">
+      <b>Interactive prototype</b> · sample data — filter the inbox, click a message, or ask a question. Not connected to live email.
+    </div>
+
+    <div class="topbar">
+      <div class="brand"><span class="logo"></span><span class="brand-name">unify</span><span class="beta">demo</span></div>
+      <div class="avatar">L</div>
+    </div>
+
+    <div class="accounts">
+      <div class="acct"><span class="badge gmail"><span class="dot gmail"></span>Gmail</span><span class="email mono">you@gmail.com</span><span class="status">Synced<span class="faint"> · 500</span></span></div>
+      <div class="acct"><span class="badge outlook"><span class="dot outlook"></span>Outlook</span><span class="email mono">you@outlook.com</span><span class="status">Synced<span class="faint"> · 500</span></span></div>
+      <div class="spacer"><button class="btn-ghost">Re-sync</button><button class="btn-ghost fg">+ Gmail</button><button class="btn-ghost fg">+ Outlook</button></div>
+    </div>
+
+    <div class="search-wrap">
+      <form id="searchForm" class="search-box" autocomplete="off">
+        <span class="search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></span>
+        <input id="q" placeholder="Ask anything about your email — try “what did Stripe say about the failed payment?”" />
+        <kbd id="kbd">⌘K</kbd>
+        <button class="ask-btn" id="askBtn" type="submit">Ask</button>
+      </form>
+
+      <div class="answer-card" id="answerCard">
+        <div class="answer-body">
+          <div class="label accent">Answer</div>
+          <div id="answerText"></div>
+        </div>
+        <div class="sources">
+          <div class="label subtle" id="sourcesLabel">Sources</div>
+          <div id="sourcesList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inbox-head">
+      <div class="inbox-title">
+        <span class="mono" style="font-size:11px;color:var(--fg-subtle);text-transform:uppercase;letter-spacing:.16em;">Inbox</span>
+        <span class="mono" id="count" style="font-size:11px;color:var(--fg-faint);">1,000 messages</span>
+      </div>
+      <div class="filters">
+        <button class="filter active" data-f="ALL">All</button>
+        <button class="filter" data-f="gmail">Gmail</button>
+        <button class="filter" data-f="outlook">Outlook</button>
+      </div>
+    </div>
+
+    <div id="rows"></div>
+
+    <div class="drawer-overlay" id="drawer">
+      <div class="backdrop" id="backdrop"></div>
+      <aside class="drawer">
+        <div class="drawer-head">
+          <span class="mono" style="font-size:11px;color:var(--fg-subtle);text-transform:uppercase;letter-spacing:.16em;">Message</span>
+          <button class="drawer-close" id="drawerClose">Esc ✕</button>
+        </div>
+        <div class="drawer-content" id="drawerContent"></div>
+      </aside>
+    </div>
+
+    <script>
+      const EMAILS = [
+        {p:"gmail",from:"Stripe",email:"billing@stripe.com",subj:"Action needed: your payment failed",snip:"Your payment for the Pro plan could not be processed — card ending 4242 was declined…",date:"Jun 3",unread:true,
+          body:"Hi,\n\nWe were unable to process your most recent payment for the Unify Pro subscription. The card ending in 4242 was declined due to insufficient funds.\n\nWe'll automatically retry the charge on June 8. If it fails again, we'll make a final attempt on June 12, after which your subscription will be paused.\n\nYou can update your payment method any time from your billing settings.\n\n— The Stripe team"},
+        {p:"outlook",from:"Dana Whitfield",email:"dana@acme.com",subj:"Re: invoice — happy to switch you to ACH",snip:"Totally understand. I can move this invoice to ACH so you don't hit another decline…",date:"Jun 4",unread:true,
+          body:"Hey,\n\nSaw the failed charge come through. Totally understand — happy to switch this invoice over to ACH so you don't run into another card decline before the retry on the 8th.\n\nJust let me know and I'll send over the updated invoice.\n\nBest,\nDana"},
+        {p:"gmail",from:"GitHub",email:"noreply@github.com",subj:"[unified] CI passed on main",snip:"All checks have passed for commit 5a115e5 — build, lint, type-check and tests are green.",date:"Jun 4",unread:false,
+          body:"All checks have passed for the latest push to main.\n\n✓ Lint\n✓ Type-check\n✓ Test (19 passed)\n✓ Build\n\nCommit: 5a115e5 — test(api): cover GET /api/emails/[id]"},
+        {p:"outlook",from:"Notion",email:"team@notion.so",subj:"Your weekly workspace digest",snip:"12 pages edited, 3 new comments mention you, and 2 databases were updated this week.",date:"Jun 4",unread:false,body:"Here's what happened in your workspace this week: 12 pages edited, 3 comments mention you, 2 databases updated."},
+        {p:"gmail",from:"Vercel",email:"notifications@vercel.com",subj:"Deployment ready: unified-prod",snip:"unified-prod is live. Inspect the deployment and view build logs in your dashboard.",date:"Jun 3",unread:false,body:"Your deployment to unified-prod is ready and live. Build completed in 47s."},
+        {p:"gmail",from:"Anthropic",email:"team@anthropic.com",subj:"Your API usage summary",snip:"You used 1.2M input tokens and 340K output tokens with claude-sonnet-4 this week.",date:"Jun 3",unread:false,body:"Weekly usage: 1.2M input tokens, 340K output tokens on claude-sonnet-4. You're well within your limits."},
+        {p:"outlook",from:"Calendar",email:"calendar@outlook.com",subj:"Invitation: Design review @ Thu 2:00 PM",snip:"Sarah invited you to 'Design review' on Thursday from 2:00–2:45 PM. Agenda attached.",date:"Jun 2",unread:true,body:"You're invited to 'Design review' on Thursday, 2:00–2:45 PM. Organized by Sarah. Agenda: search UX, empty states, mobile layout."},
+        {p:"gmail",from:"Linear",email:"notifications@linear.app",subj:"3 issues assigned to you",snip:"ENG-204 Sync pagination, ENG-210 Token refresh edge case, ENG-218 Empty state copy.",date:"Jun 2",unread:false,body:"You have 3 open issues: ENG-204 Sync pagination, ENG-210 Token refresh edge case, ENG-218 Empty state copy."},
+        {p:"outlook",from:"AWS",email:"no-reply@aws.amazon.com",subj:"Your monthly bill is available",snip:"Your estimated total for May is $214.06. RDS and S3 account for most of the change.",date:"Jun 2",unread:false,body:"Your AWS estimated bill for May is $214.06. Largest line items: RDS ($121), S3 ($46)."},
+        {p:"gmail",from:"Postgres Weekly",email:"hi@postgresweekly.com",subj:"Issue #547 — pgvector 0.7 and HNSW tuning",snip:"This week: HNSW vs IVFFlat benchmarks, vector quantization, and ef_search tuning tips.",date:"Jun 1",unread:false,body:"In this issue: pgvector 0.7 release notes, HNSW vs IVFFlat benchmarks, and how to tune ef_search for recall."},
+        {p:"outlook",from:"Recruiter — Aanya R.",email:"aanya@hireloop.io",subj:"Saw your AI email-search project — quick chat?",snip:"Really impressed by the Unify project on your GitHub. Are you open to a 20-min call?",date:"May 31",unread:true,body:"Hi Lokesh,\n\nI came across your Unify project on GitHub — connecting Gmail/Outlook and doing semantic search with Claude is exactly the kind of work we're hiring for. Would you be open to a quick 20-minute call this week?\n\nBest,\nAanya"},
+        {p:"gmail",from:"Inngest",email:"hello@inngest.com",subj:"Function 'sync-mailbox' completed",snip:"Run finished in 41s — 500 messages fetched, embedded and stored. 0 failures.",date:"May 30",unread:false,body:"Your function sync-mailbox completed successfully in 41s. 500 messages fetched, embedded, and stored. 0 failures, 0 retries."}
+      ];
+
+      const $ = (s) => document.querySelector(s);
+      const rowsEl = $("#rows");
+      let filter = "ALL";
+
+      function badge(p){ return `<span class="badge ${p}"><span class="dot ${p}"></span>${p==="gmail"?"Gmail":"Outlook"}</span>`; }
+
+      function render(){
+        const list = EMAILS.filter(e => filter==="ALL" || e.p===filter);
+        rowsEl.innerHTML = list.map((e,i) => `
+          <button class="row" data-i="${EMAILS.indexOf(e)}">
+            ${badge(e.p)}
+            <span class="sender ${e.unread?'unread':'read'}">${e.from}</span>
+            <span class="mid"><span class="subj ${e.unread?'unread':''}">${e.subj}</span><span class="snippet">${e.snip}</span></span>
+            <span class="date">${e.date}</span>
+          </button>`).join("");
+        document.querySelectorAll(".row").forEach(r => r.addEventListener("click", () => openDrawer(+r.dataset.i)));
+      }
+
+      // Filters
+      document.querySelectorAll(".filter").forEach(b => b.addEventListener("click", () => {
+        document.querySelectorAll(".filter").forEach(x => x.classList.remove("active"));
+        b.classList.add("active"); filter = b.dataset.f; render();
+      }));
+
+      // Drawer
+      function openDrawer(i){
+        const e = EMAILS[i];
+        $("#drawerContent").innerHTML = `
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">${badge(e.p)} ${e.unread?'<span style="background:rgba(59,130,246,.15);color:var(--accent-bright);font-family:JetBrains Mono;font-size:11px;padding:2px 6px;border-radius:4px;">unread</span>':''}</div>
+          <div class="drawer-subject">${e.subj}</div>
+          <dl class="meta">
+            <div class="meta-row"><dt>From</dt><dd><span style="color:var(--fg)">${e.from}</span> · ${e.email}</dd></div>
+            <div class="meta-row"><dt>Date</dt><dd>${e.date}, 2026</dd></div>
+          </dl>
+          <div class="body">${e.body}</div>`;
+        $("#drawer").classList.add("open");
+      }
+      function closeDrawer(){ $("#drawer").classList.remove("open"); }
+      $("#backdrop").addEventListener("click", closeDrawer);
+      $("#drawerClose").addEventListener("click", closeDrawer);
+
+      // Search (simulated streaming answer)
+      const ANSWERS = {
+        stripe: {
+          text:"Stripe flagged a failed charge on your Pro subscription on Jun 3 — the card ending 4242 was declined for insufficient funds [1]. They'll automatically retry on Jun 8, and again on Jun 12 if it fails, after which the subscription is paused [1][3]. Your contact Dana also offered to switch the invoice to ACH to avoid another decline [2]. No action needed unless you want to update the card before Jun 8.",
+          sources:[[0,"91%"],[1,"88%"],[4,"85%"]]
+        },
+        _default: {
+          text:"Based on your most relevant emails: your CI is passing on main [1], Anthropic reports healthy API usage this week [2], and a recruiter (Aanya) reached out about your Unify project and wants a 20-minute call [3]. Want me to narrow this down — try mentioning a sender or topic.",
+          sources:[[2,"82%"],[5,"79%"],[10,"77%"]]
+        }
+      };
+      let streaming = false;
+      function streamAnswer(q){
+        if (streaming) return;
+        const key = /stripe|payment|charge|declin|invoice/i.test(q) ? "stripe" : "_default";
+        const a = ANSWERS[key];
+        $("#answerCard").classList.add("open");
+        const at = $("#answerText"); at.innerHTML = "";
+        $("#sourcesList").innerHTML = "";
+        $("#sourcesLabel").textContent = "Searching…";
+        streaming = true; $("#askBtn").disabled = true;
+        const full = a.text; let n = 0;
+        const tick = setInterval(() => {
+          n += 2;
+          at.innerHTML = full.slice(0,n).replace(/\[(\d)\]/g,'<span class="cite">[$1]</span>') + '<span class="caret"></span>';
+          if (n >= full.length){
+            clearInterval(tick);
+            at.innerHTML = full.replace(/\[(\d)\]/g,'<span class="cite">[$1]</span>');
+            $("#sourcesLabel").textContent = a.sources.length + " sources";
+            $("#sourcesList").innerHTML = a.sources.map(([i,score],k) => {
+              const e = EMAILS[i];
+              return `<div class="src-row" data-i="${i}"><span class="src-num">${k+1}</span>${badge(e.p)}<span class="src-sender">${e.from}</span><span class="src-subj">${e.subj}</span><span class="src-meta">${e.date}</span><span class="src-meta">${score}</span></div>`;
+            }).join("");
+            document.querySelectorAll(".src-row").forEach(r => r.addEventListener("click", () => openDrawer(+r.dataset.i)));
+            streaming = false; $("#askBtn").disabled = false;
+          }
+        }, 14);
+      }
+      $("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); const q = $("#q").value.trim(); if(q) streamAnswer(q); });
+
+      // Shortcuts
+      window.addEventListener("keydown", (e) => {
+        if (((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k") || (e.key==="/" && document.activeElement!==$("#q"))) { e.preventDefault(); $("#q").focus(); }
+        else if (e.key==="Escape") { if($("#drawer").classList.contains("open")) closeDrawer(); else $("#q").blur(); }
+      });
+
+      render();
+    </script>
+  </body>
+</html>

@@ -17,7 +17,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Data Unification",
+  title: "Unify",
   description:
     "Your personal data platform. Connect Gmail and Outlook, search your email with Claude.",
 };

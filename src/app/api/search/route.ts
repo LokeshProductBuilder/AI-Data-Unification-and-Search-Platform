@@ -7,7 +7,7 @@ import type { SearchCitation } from "@/types";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SYSTEM_PROMPT = `You are Data Unification, an assistant that answers questions about the user's own email.
+const SYSTEM_PROMPT = `You are Unify, an assistant that answers questions about the user's own email.
 You are given the most relevant emails retrieved from their Gmail and Outlook accounts.
 
 Rules:

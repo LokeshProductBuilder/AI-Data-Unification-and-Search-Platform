@@ -1,4 +1,4 @@
-# Data Unification — Product Requirements Document
+# Unify — Product Requirements Document
 
 **Status:** Living document · **Owner:** Lokesh Mallagi · **Last updated:** July 2026
 
@@ -6,7 +6,7 @@
 
 ## 1. Overview
 
-**Data Unification** is a personal data platform that connects a user's email accounts
+**Unify** is a personal data platform that connects a user's email accounts
 (Gmail and Outlook) and lets them find answers across everything they've received
 using natural language, instead of keyword search and manual scrolling.
 

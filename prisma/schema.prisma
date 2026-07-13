@@ -1,4 +1,4 @@
-// Data Unification — personal data platform
+// Unify — personal data platform
 // Postgres + pgvector. text-embedding-3-small => 1536 dimensions.
 
 generator client {

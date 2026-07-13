@@ -1,4 +1,4 @@
-# Data Unification
+# Unify
 
 [![CI](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/LokeshProductBuilder/AI-Data-Unification-and-Search-Platform/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -11,7 +11,7 @@ A personal data platform. Connect Gmail and Outlook, pull your email, and search
 - [**Use cases**](docs/use-cases.md) — user stories, flows, and the edge cases considered.
 - [**Roadmap**](ROADMAP.md) — what's shipped and what's next.
 
-![Data Unification dashboard — AI search over Gmail + Outlook with cited sources](docs/dashboard.png)
+![Unify dashboard — AI search over Gmail + Outlook with cited sources](docs/dashboard.png)
 
 > _Dashboard UI with sample data: a natural-language question is embedded, matched against your emails with a pgvector similarity search, and answered by Claude with citations back to the specific messages._
 

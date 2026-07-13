@@ -37,7 +37,7 @@
       .beta { margin-left: 4px; background: var(--bg-raised); color: var(--fg-subtle); font-family: "JetBrains Mono"; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
       .avatar { height: 28px; width: 28px; border-radius: 999px; background: linear-gradient(135deg, #1d6fff, #6d28d9); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; }
 
-      .accounts { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--bg-subtle); border-bottom: 1px solid var(--border); }
+      .accounts { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--bg-subtle); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
       .acct { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--bg-raised); padding: 6px 10px; border-radius: 6px; }
       .acct .email { color: var(--fg-muted); font-size: 11px; }
       .badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 4px; padding: 2px 6px; font-family: "JetBrains Mono"; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .04em; background: var(--bg-overlay); }
@@ -64,6 +64,16 @@
       .ask-btn:hover { background: var(--accent-hover); }
       .ask-btn:disabled { opacity: .4; cursor: default; }
 
+      .chips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+      .chip { font-family: "JetBrains Mono"; font-size: 11px; color: var(--fg-muted); background: var(--bg-raised); border: 1px solid var(--border); padding: 5px 10px; border-radius: 999px; cursor: pointer; }
+      .chip:hover { border-color: var(--border-strong); color: var(--fg); }
+
+      .trace { font-family: "JetBrains Mono"; font-size: 11px; color: var(--fg-subtle); padding: 12px 2px 0; display: none; }
+      .trace.open { display: block; }
+      .trace .line { display: flex; align-items: center; gap: 8px; padding: 1px 0; }
+      .trace .ok { color: var(--emerald); }
+      .trace .run { color: var(--accent-bright); }
+
       .answer-card { margin-top: 12px; border: 1px solid var(--border); background: var(--bg-raised); border-radius: 10px; display: none; }
       .answer-card.open { display: block; animation: fade .15s ease-out; }
       @keyframes fade { from { opacity: 0; transform: translateY(3px);} to {opacity:1; transform:none;} }
@@ -71,7 +81,8 @@
       .label { font-family: "JetBrains Mono"; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 6px; }
       .label.accent { color: var(--accent-bright); } .label.subtle { color: var(--fg-subtle); }
       #answerText { font-size: 13px; line-height: 1.6; color: var(--fg); white-space: pre-wrap; }
-      .cite { color: var(--accent-bright); font-weight: 600; }
+      #answerText mark { background: rgba(59,130,246,.20); color: var(--fg); border-radius: 2px; padding: 0 2px; }
+      .cite { color: var(--accent-bright); font-weight: 600; cursor: pointer; }
       .caret { display:inline-block; width:7px; height:15px; background:var(--accent); vertical-align:-2px; animation: blink 1s steps(1) infinite; }
       @keyframes blink { 50% { opacity: 0; } }
       .sources { padding: 12px 16px; }
@@ -81,6 +92,7 @@
       .src-sender { width: 150px; color: var(--fg-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .src-subj { flex: 1; color: var(--fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .src-meta { font-family: "JetBrains Mono"; color: var(--fg-subtle); }
+      .src-score { font-family: "JetBrains Mono"; color: var(--emerald); width: 40px; text-align: right; }
 
       .inbox-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 10px 16px; }
       .inbox-title { display: flex; align-items: center; gap: 8px; }
@@ -96,6 +108,7 @@
       .row .subj { color: var(--fg); } .row .subj.unread { font-weight: 600; }
       .row .snippet { color: var(--fg-subtle); margin-left: 8px; }
       .row .date { font-family: "JetBrains Mono"; font-size: 11px; color: var(--fg-subtle); white-space: nowrap; }
+      .empty { padding: 28px 16px; text-align: center; color: var(--fg-subtle); font-size: 13px; }
 
       .drawer-overlay { position: fixed; inset: 0; z-index: 50; display: none; }
       .drawer-overlay.open { display: flex; justify-content: flex-end; }
@@ -112,11 +125,30 @@
       .meta-row dt { width: 48px; color: var(--fg-faint); text-transform: uppercase; }
       .meta-row dd { color: var(--fg-muted); }
       .body { font-size: 13px; line-height: 1.7; color: var(--fg-muted); white-space: pre-wrap; }
+
+      .modal-overlay { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 20px; }
+      .modal-overlay.open { display: flex; }
+      .modal { position: relative; width: 100%; max-width: 420px; background: var(--bg-raised); border: 1px solid var(--border-strong); border-radius: 12px; padding: 20px; animation: fade .15s; z-index: 1; }
+      .modal h3 { font-size: 15px; margin-bottom: 4px; }
+      .modal p { font-size: 12px; color: var(--fg-muted); line-height: 1.5; }
+      .modal .provider-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+      .scopes { list-style: none; margin: 14px 0; display: grid; gap: 8px; }
+      .scopes li { font-size: 12px; color: var(--fg-muted); display: flex; gap: 8px; align-items: center; }
+      .scopes li::before { content: "✓"; color: var(--emerald); font-size: 11px; }
+      .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+      .btn-primary { background: var(--accent); color: #fff; border: none; font-size: 12px; font-family: "JetBrains Mono"; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+      .btn-primary:hover { background: var(--accent-hover); }
+      .progress { height: 6px; background: var(--bg-overlay); border-radius: 999px; overflow: hidden; margin: 16px 0 10px; }
+      .progress > span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+      .sync-step { font-family: "JetBrains Mono"; font-size: 11px; color: var(--fg-muted); min-height: 16px; }
+
+      .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-overlay); border: 1px solid var(--border-strong); color: var(--fg); font-size: 12px; padding: 10px 16px; border-radius: 8px; opacity: 0; transition: all .2s; z-index: 70; font-family: "JetBrains Mono"; }
+      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
   </head>
   <body>
     <div class="demo-flag">
-      <b>Interactive prototype</b> · sample data — filter the inbox, click a message, or ask a question. Not connected to live email.
+      <b>Interactive prototype</b> · sample data — ask any question and it ranks &amp; cites real matches from the inbox below. Not connected to live email.
     </div>
 
     <div class="topbar">
@@ -124,11 +156,7 @@
       <div class="avatar">L</div>
     </div>
 
-    <div class="accounts">
-      <div class="acct"><span class="badge gmail"><span class="dot gmail"></span>Gmail</span><span class="email mono">you@gmail.com</span><span class="status">Synced<span class="faint"> · 500</span></span></div>
-      <div class="acct"><span class="badge outlook"><span class="dot outlook"></span>Outlook</span><span class="email mono">you@outlook.com</span><span class="status">Synced<span class="faint"> · 500</span></span></div>
-      <div class="spacer"><button class="btn-ghost">Re-sync</button><button class="btn-ghost fg">+ Gmail</button><button class="btn-ghost fg">+ Outlook</button></div>
-    </div>
+    <div class="accounts" id="accounts"></div>
 
     <div class="search-wrap">
       <form id="searchForm" class="search-box" autocomplete="off">
@@ -137,6 +165,9 @@
         <kbd id="kbd">⌘K</kbd>
         <button class="ask-btn" id="askBtn" type="submit">Ask</button>
       </form>
+
+      <div class="chips" id="chips"></div>
+      <div class="trace" id="trace"></div>
 
       <div class="answer-card" id="answerCard">
         <div class="answer-body">
@@ -153,7 +184,7 @@
     <div class="inbox-head">
       <div class="inbox-title">
         <span class="mono" style="font-size:11px;color:var(--fg-subtle);text-transform:uppercase;letter-spacing:.16em;">Inbox</span>
-        <span class="mono" id="count" style="font-size:11px;color:var(--fg-faint);">1,000 messages</span>
+        <span class="mono" id="count" style="font-size:11px;color:var(--fg-faint);"></span>
       </div>
       <div class="filters">
         <button class="filter active" data-f="ALL">All</button>
@@ -175,34 +206,78 @@
       </aside>
     </div>
 
+    <div class="modal-overlay" id="modal">
+      <div class="backdrop" id="modalBackdrop"></div>
+      <div class="modal" id="modalBox"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
     <script>
       const EMAILS = [
         {p:"gmail",from:"Stripe",email:"billing@stripe.com",subj:"Action needed: your payment failed",snip:"Your payment for the Pro plan could not be processed — card ending 4242 was declined…",date:"Jun 3",unread:true,
           body:"Hi,\n\nWe were unable to process your most recent payment for the Unify Pro subscription. The card ending in 4242 was declined due to insufficient funds.\n\nWe'll automatically retry the charge on June 8. If it fails again, we'll make a final attempt on June 12, after which your subscription will be paused.\n\nYou can update your payment method any time from your billing settings.\n\n— The Stripe team"},
         {p:"outlook",from:"Dana Whitfield",email:"dana@acme.com",subj:"Re: invoice — happy to switch you to ACH",snip:"Totally understand. I can move this invoice to ACH so you don't hit another decline…",date:"Jun 4",unread:true,
           body:"Hey,\n\nSaw the failed charge come through. Totally understand — happy to switch this invoice over to ACH so you don't run into another card decline before the retry on the 8th.\n\nJust let me know and I'll send over the updated invoice.\n\nBest,\nDana"},
-        {p:"gmail",from:"GitHub",email:"noreply@github.com",subj:"[unified] CI passed on main",snip:"All checks have passed for commit 5a115e5 — build, lint, type-check and tests are green.",date:"Jun 4",unread:false,
-          body:"All checks have passed for the latest push to main.\n\n✓ Lint\n✓ Type-check\n✓ Test (19 passed)\n✓ Build\n\nCommit: 5a115e5 — test(api): cover GET /api/emails/[id]"},
+        {p:"gmail",from:"GitHub",email:"noreply@github.com",subj:"[unify] CI passed on main",snip:"All checks have passed for commit 5a115e5 — build, lint, type-check and tests are green.",date:"Jun 4",unread:false,
+          body:"All checks have passed for the latest push to main.\n\n✓ Lint\n✓ Type-check\n✓ Test (35 passed)\n✓ Build\n\nCommit: 5a115e5 — test: expand coverage for env, search, and token refresh"},
         {p:"outlook",from:"Notion",email:"team@notion.so",subj:"Your weekly workspace digest",snip:"12 pages edited, 3 new comments mention you, and 2 databases were updated this week.",date:"Jun 4",unread:false,body:"Here's what happened in your workspace this week: 12 pages edited, 3 comments mention you, 2 databases updated."},
-        {p:"gmail",from:"Vercel",email:"notifications@vercel.com",subj:"Deployment ready: unified-prod",snip:"unified-prod is live. Inspect the deployment and view build logs in your dashboard.",date:"Jun 3",unread:false,body:"Your deployment to unified-prod is ready and live. Build completed in 47s."},
-        {p:"gmail",from:"Anthropic",email:"team@anthropic.com",subj:"Your API usage summary",snip:"You used 1.2M input tokens and 340K output tokens with claude-sonnet-4 this week.",date:"Jun 3",unread:false,body:"Weekly usage: 1.2M input tokens, 340K output tokens on claude-sonnet-4. You're well within your limits."},
-        {p:"outlook",from:"Calendar",email:"calendar@outlook.com",subj:"Invitation: Design review @ Thu 2:00 PM",snip:"Sarah invited you to 'Design review' on Thursday from 2:00–2:45 PM. Agenda attached.",date:"Jun 2",unread:true,body:"You're invited to 'Design review' on Thursday, 2:00–2:45 PM. Organized by Sarah. Agenda: search UX, empty states, mobile layout."},
-        {p:"gmail",from:"Linear",email:"notifications@linear.app",subj:"3 issues assigned to you",snip:"ENG-204 Sync pagination, ENG-210 Token refresh edge case, ENG-218 Empty state copy.",date:"Jun 2",unread:false,body:"You have 3 open issues: ENG-204 Sync pagination, ENG-210 Token refresh edge case, ENG-218 Empty state copy."},
-        {p:"outlook",from:"AWS",email:"no-reply@aws.amazon.com",subj:"Your monthly bill is available",snip:"Your estimated total for May is $214.06. RDS and S3 account for most of the change.",date:"Jun 2",unread:false,body:"Your AWS estimated bill for May is $214.06. Largest line items: RDS ($121), S3 ($46)."},
-        {p:"gmail",from:"Postgres Weekly",email:"hi@postgresweekly.com",subj:"Issue #547 — pgvector 0.7 and HNSW tuning",snip:"This week: HNSW vs IVFFlat benchmarks, vector quantization, and ef_search tuning tips.",date:"Jun 1",unread:false,body:"In this issue: pgvector 0.7 release notes, HNSW vs IVFFlat benchmarks, and how to tune ef_search for recall."},
+        {p:"gmail",from:"Vercel",email:"notifications@vercel.com",subj:"Deployment ready: unify-prod",snip:"unify-prod is live. Inspect the deployment and view build logs in your dashboard.",date:"Jun 3",unread:false,body:"Your deployment to unify-prod is ready and live. Build completed in 47s. Inspect the deployment and view build logs in your dashboard."},
+        {p:"gmail",from:"Anthropic",email:"team@anthropic.com",subj:"Your API usage summary",snip:"You used 1.2M input tokens and 340K output tokens with claude-sonnet-4 this week.",date:"Jun 3",unread:false,body:"Weekly usage: 1.2M input tokens, 340K output tokens on claude-sonnet-4. You're well within your rate limits and monthly budget."},
+        {p:"outlook",from:"Calendar",email:"calendar@outlook.com",subj:"Invitation: Design review @ Thu 2:00 PM",snip:"Sarah invited you to 'Design review' on Thursday from 2:00–2:45 PM. Agenda attached.",date:"Jun 2",unread:true,body:"You're invited to 'Design review' on Thursday, 2:00–2:45 PM. Organized by Sarah. Agenda: search UX, empty states, and mobile layout."},
+        {p:"gmail",from:"Linear",email:"notifications@linear.app",subj:"3 issues assigned to you",snip:"ENG-204 Sync pagination, ENG-210 Token refresh edge case, ENG-218 Empty state copy.",date:"Jun 2",unread:false,body:"You have 3 open issues assigned to you: ENG-204 Sync pagination, ENG-210 Token refresh edge case, and ENG-218 Empty state copy."},
+        {p:"outlook",from:"AWS",email:"no-reply@aws.amazon.com",subj:"Your monthly bill is available",snip:"Your estimated total for May is $214.06. RDS and S3 account for most of the change.",date:"Jun 2",unread:false,body:"Your AWS estimated bill for May is $214.06. Largest line items: RDS ($121), S3 ($46), and data transfer ($22). This is up 8% from April."},
+        {p:"gmail",from:"Postgres Weekly",email:"hi@postgresweekly.com",subj:"Issue #547 — pgvector 0.7 and HNSW tuning",snip:"This week: HNSW vs IVFFlat benchmarks, vector quantization, and ef_search tuning tips.",date:"Jun 1",unread:false,body:"In this issue: pgvector 0.7 release notes, HNSW vs IVFFlat benchmarks, and how to tune ef_search for better recall in similarity search."},
         {p:"outlook",from:"Recruiter — Aanya R.",email:"aanya@hireloop.io",subj:"Saw your AI email-search project — quick chat?",snip:"Really impressed by the Unify project on your GitHub. Are you open to a 20-min call?",date:"May 31",unread:true,body:"Hi Lokesh,\n\nI came across your Unify project on GitHub — connecting Gmail/Outlook and doing semantic search with Claude is exactly the kind of work we're hiring for. Would you be open to a quick 20-minute call this week?\n\nBest,\nAanya"},
-        {p:"gmail",from:"Inngest",email:"hello@inngest.com",subj:"Function 'sync-mailbox' completed",snip:"Run finished in 41s — 500 messages fetched, embedded and stored. 0 failures.",date:"May 30",unread:false,body:"Your function sync-mailbox completed successfully in 41s. 500 messages fetched, embedded, and stored. 0 failures, 0 retries."}
+        {p:"gmail",from:"Inngest",email:"hello@inngest.com",subj:"Function 'sync-mailbox' completed",snip:"Run finished in 41s — 500 messages fetched, embedded and stored. 0 failures.",date:"May 30",unread:false,body:"Your background function sync-mailbox completed successfully in 41s. 500 messages fetched, embedded, and stored. 0 failures, 0 retries."},
+        {p:"gmail",from:"Sentry",email:"alerts@sentry.io",subj:"New error spike: TokenRefreshError",snip:"12 events in the last hour on /api/search — a refresh token appears to be expired.",date:"May 30",unread:true,body:"An error is spiking in production: TokenRefreshError on /api/search — 12 events in the last hour. Likely an expired refresh token that isn't being rotated. View the stack trace in Sentry."},
+        {p:"outlook",from:"Sarah Chen",email:"sarah@acme.com",subj:"1:1 tomorrow — agenda?",snip:"Anything you want to cover in our 1:1 tomorrow? I'd like to talk roadmap priorities.",date:"May 29",unread:true,body:"Hey — anything you want to cover in our 1:1 tomorrow at 3pm? On my side I'd like to align on roadmap priorities for next quarter and the search feature launch."},
+        {p:"gmail",from:"Figma",email:"no-reply@figma.com",subj:"Sarah commented on 'Search UX v2'",snip:"“Love the inline citations — can we highlight the cited email in the list too?”",date:"May 29",unread:false,body:"Sarah left a comment on 'Search UX v2': “Love the inline citations — can we highlight the cited email in the list too?” Reply in Figma to continue the thread."},
+        {p:"outlook",from:"Chase",email:"alerts@chase.com",subj:"Statement ready + unusual activity check",snip:"Your May statement is ready. We flagged one charge for review — was this you?",date:"May 28",unread:false,body:"Your May statement is now available. We also flagged one charge ($89.00, online electronics) for review as potentially unusual. If this was you, no action is needed."},
+        {p:"gmail",from:"United Airlines",email:"confirm@united.com",subj:"Your trip to SFO is confirmed — Jun 18",snip:"Confirmation ABC123. Departs SJC 8:05 AM, arrives SFO. Check in 24h before.",date:"May 27",unread:false,body:"Your flight is confirmed. Confirmation ABC123. Departs SJC 8:05 AM on Jun 18. You can check in starting 24 hours before departure."},
+        {p:"outlook",from:"Amazon",email:"ship-confirm@amazon.com",subj:"Your order has shipped",snip:"Your order of 'USB-C hub' has shipped and arrives Thursday. Track your package.",date:"May 27",unread:false,body:"Good news — your order of 'USB-C hub (7-in-1)' has shipped and is expected to arrive Thursday. Track your package from your orders page."},
+        {p:"gmail",from:"OpenAI",email:"team@openai.com",subj:"Usage report + text-embedding-3 update",snip:"You embedded 1,000 documents this week. Embedding latency improved by 15%.",date:"May 26",unread:false,body:"Weekly report: you embedded 1,000 documents with text-embedding-3-small. Average embedding latency improved 15% after our latest update."},
+        {p:"outlook",from:"Recruiter — Marcus L.",email:"marcus@bigtech.example",subj:"AI PM role — would love to connect",snip:"Your Unify project stood out. We're hiring an AI Product Manager — open to chatting?",date:"May 25",unread:true,body:"Hi Lokesh,\n\nYour Unify project really stood out — the mix of product docs and a working RAG build is exactly what we look for. We're hiring an AI Product Manager on my team. Would you be open to a short intro call next week?\n\nThanks,\nMarcus"},
+        {p:"gmail",from:"Product Feedback",email:"feedback@unify.app",subj:"New response: NPS survey",snip:"“The natural-language search is the killer feature — I stopped using folders.” — 9/10",date:"May 24",unread:false,body:"A new survey response came in. Score: 9/10. Comment: “The natural-language search is the killer feature — I stopped using folders entirely. Would pay for this.”"},
+        {p:"outlook",from:"Ramp",email:"noreply@ramp.com",subj:"3 expenses need receipts",snip:"Submit receipts for 3 transactions before Friday to stay compliant with policy.",date:"May 23",unread:false,body:"You have 3 transactions missing receipts. Please submit them before Friday to stay compliant with your company's expense policy."}
       ];
 
       const $ = (s) => document.querySelector(s);
       const rowsEl = $("#rows");
       let filter = "ALL";
 
+      // Connected accounts (mutable so the connect flow can add one).
+      const ACCOUNTS = [
+        {p:"gmail", email:"you@gmail.com", count:500},
+        {p:"outlook", email:"you@outlook.com", count:500},
+      ];
+
       function badge(p){ return `<span class="badge ${p}"><span class="dot ${p}"></span>${p==="gmail"?"Gmail":"Outlook"}</span>`; }
+      function totalSynced(){ return ACCOUNTS.reduce((n,a)=>n+a.count,0); }
+
+      function renderAccounts(){
+        const acctHtml = ACCOUNTS.map(a =>
+          `<div class="acct">${badge(a.p)}<span class="email mono">${a.email}</span><span class="status">Synced<span class="faint"> · ${a.count}</span></span></div>`
+        ).join("");
+        const hasGmail = ACCOUNTS.some(a=>a.p==="gmail");
+        const hasOutlook = ACCOUNTS.some(a=>a.p==="outlook");
+        const btns =
+          `<button class="btn-ghost" id="resyncBtn">Re-sync</button>` +
+          (hasGmail && hasOutlook
+            ? `<button class="btn-ghost fg" data-connect="gmail">+ Add account</button>`
+            : (!hasGmail ? `<button class="btn-ghost fg" data-connect="gmail">+ Gmail</button>` : "") +
+              (!hasOutlook ? `<button class="btn-ghost fg" data-connect="outlook">+ Outlook</button>` : ""));
+        $("#accounts").innerHTML = acctHtml + `<div class="spacer">${btns}</div>`;
+        $("#resyncBtn").addEventListener("click", () => runResync());
+        document.querySelectorAll("[data-connect]").forEach(b =>
+          b.addEventListener("click", () => openConnect(b.dataset.connect)));
+      }
 
       function render(){
         const list = EMAILS.filter(e => filter==="ALL" || e.p===filter);
-        rowsEl.innerHTML = list.map((e,i) => `
+        $("#count").textContent = `showing ${list.length} recent · ${totalSynced().toLocaleString()} synced`;
+        if (!list.length){ rowsEl.innerHTML = `<div class="empty">No messages for this filter.</div>`; return; }
+        rowsEl.innerHTML = list.map((e) => `
           <button class="row" data-i="${EMAILS.indexOf(e)}">
             ${badge(e.p)}
             <span class="sender ${e.unread?'unread':'read'}">${e.from}</span>
@@ -235,52 +310,214 @@
       $("#backdrop").addEventListener("click", closeDrawer);
       $("#drawerClose").addEventListener("click", closeDrawer);
 
-      // Search (simulated streaming answer)
-      const ANSWERS = {
-        stripe: {
-          text:"Stripe flagged a failed charge on your Pro subscription on Jun 3 — the card ending 4242 was declined for insufficient funds [1]. They'll automatically retry on Jun 8, and again on Jun 12 if it fails, after which the subscription is paused [1][3]. Your contact Dana also offered to switch the invoice to ACH to avoid another decline [2]. No action needed unless you want to update the card before Jun 8.",
-          sources:[[0,"91%"],[1,"88%"],[4,"85%"]]
-        },
-        _default: {
-          text:"Based on your most relevant emails: your CI is passing on main [1], Anthropic reports healthy API usage this week [2], and a recruiter (Aanya) reached out about your Unify project and wants a 20-minute call [3]. Want me to narrow this down — try mentioning a sender or topic.",
-          sources:[[2,"82%"],[5,"79%"],[10,"77%"]]
+      // ---- Retrieval: lexical ranking over the sample corpus ----
+      const STOP = new Set("a an the is are was were be been of to for on in at and or but with your you my me i it this that about what did do does say said how when who whats what's tell show find me any".split(" "));
+      function tokenize(s){ return (s.toLowerCase().match(/[a-z0-9]+/g)||[]).filter(t => !STOP.has(t) && t.length>1); }
+
+      function scoreEmail(e, terms){
+        const subj = e.subj.toLowerCase();
+        const from = e.from.toLowerCase();
+        const text = (e.body + " " + e.snip).toLowerCase();
+        let s = 0;
+        for (const t of terms){
+          if (subj.includes(t)) s += 3;
+          if (from.includes(t)) s += 2;
+          if (text.includes(t)) s += 1;
         }
-      };
-      let streaming = false;
-      function streamAnswer(q){
-        if (streaming) return;
-        const key = /stripe|payment|charge|declin|invoice/i.test(q) ? "stripe" : "_default";
-        const a = ANSWERS[key];
-        $("#answerCard").classList.add("open");
-        const at = $("#answerText"); at.innerHTML = "";
-        $("#sourcesList").innerHTML = "";
-        $("#sourcesLabel").textContent = "Searching…";
-        streaming = true; $("#askBtn").disabled = true;
-        const full = a.text; let n = 0;
-        const tick = setInterval(() => {
-          n += 2;
-          at.innerHTML = full.slice(0,n).replace(/\[(\d)\]/g,'<span class="cite">[$1]</span>') + '<span class="caret"></span>';
-          if (n >= full.length){
-            clearInterval(tick);
-            at.innerHTML = full.replace(/\[(\d)\]/g,'<span class="cite">[$1]</span>');
-            $("#sourcesLabel").textContent = a.sources.length + " sources";
-            $("#sourcesList").innerHTML = a.sources.map(([i,score],k) => {
-              const e = EMAILS[i];
-              return `<div class="src-row" data-i="${i}"><span class="src-num">${k+1}</span>${badge(e.p)}<span class="src-sender">${e.from}</span><span class="src-subj">${e.subj}</span><span class="src-meta">${e.date}</span><span class="src-meta">${score}</span></div>`;
-            }).join("");
-            document.querySelectorAll(".src-row").forEach(r => r.addEventListener("click", () => openDrawer(+r.dataset.i)));
-            streaming = false; $("#askBtn").disabled = false;
-          }
-        }, 14);
+        return s;
       }
-      $("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); const q = $("#q").value.trim(); if(q) streamAnswer(q); });
+
+      function retrieve(q){
+        const terms = tokenize(q);
+        const scored = EMAILS.map((e,i)=>({i,e,s: terms.length ? scoreEmail(e,terms) : 0}))
+          .filter(x => x.s > 0)
+          .sort((a,b)=> b.s - a.s)
+          .slice(0,4);
+        const max = scored.length ? scored[0].s : 1;
+        scored.forEach((x,k)=>{ x.sim = Math.min(97, Math.round((0.72 + 0.25*(x.s/max))*100) - k*2); });
+        return { terms, hits: scored };
+      }
+
+      function firstSentence(body){
+        const flat = body.replace(/\s+/g," ").trim();
+        const m = flat.match(/^.*?[.!?](\s|$)/);
+        return (m ? m[0] : flat).trim();
+      }
+
+      function synthesize(q, hits){
+        if (!hits.length) return null;
+        const s = [];
+        s.push(`Here's what I found for “${q}”. The most relevant message is from ${hits[0].e.from} — ${firstSentence(hits[0].e.body)} [1]`);
+        if (hits[1]) s.push(`${hits[1].e.from} is also related: “${hits[1].e.subj}” [2].`);
+        if (hits[2]) s.push(`See as well ${hits[2].e.from} on “${hits[2].e.subj}” [3].`);
+        return s.join(" ");
+      }
+
+      function highlight(text, terms){
+        let out = text.replace(/\[(\d)\]/g, '<span class="cite" data-cite="$1">[$1]</span>');
+        for (const t of [...new Set(terms)].sort((a,b)=>b.length-a.length)){
+          out = out.replace(new RegExp(`\\b(${t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})\\b`, "gi"), (m)=> m.match(/^<[^>]*$/) ? m : `<mark>${m}</mark>`);
+        }
+        return out;
+      }
+
+      let streaming = false;
+      let citeMap = {};
+
+      function runTrace(count, done){
+        const trace = $("#trace");
+        trace.classList.add("open");
+        const steps = [
+          `<span class="run">▸</span> Embedding query with text-embedding-3-small…`,
+          `<span class="run">▸</span> Searching ${totalSynced().toLocaleString()} vectors (cosine similarity)…`,
+          `<span class="ok">✓</span> ${count} relevant match${count===1?"":"es"} found`,
+        ];
+        trace.innerHTML = "";
+        let k = 0;
+        (function next(){
+          if (k >= steps.length){ setTimeout(done, 180); return; }
+          trace.innerHTML += `<div class="line">${steps[k]}</div>`;
+          k++; setTimeout(next, 240);
+        })();
+      }
+
+      function ask(q){
+        if (streaming) return;
+        streaming = true; $("#askBtn").disabled = true;
+        $("#answerCard").classList.remove("open");
+        const { terms, hits } = retrieve(q);
+
+        runTrace(hits.length, () => {
+          $("#answerCard").classList.add("open");
+          const at = $("#answerText"); at.innerHTML = "";
+          $("#sourcesList").innerHTML = "";
+
+          if (!hits.length){
+            at.innerHTML = `I couldn't find anything matching “${q}” in your synced mail. Try a sender (e.g. <b>Stripe</b>, <b>Linear</b>, <b>Sarah</b>) or a topic (payment, deployment, meeting, recruiter, bill).`;
+            $("#sourcesLabel").textContent = "0 sources";
+            streaming = false; $("#askBtn").disabled = false;
+            return;
+          }
+
+          citeMap = {}; hits.forEach((h,k)=> citeMap[k+1] = h.i);
+          const full = synthesize(q, hits);
+          $("#sourcesLabel").textContent = "Synthesizing…";
+          let n = 0;
+          const tick = setInterval(() => {
+            n += 2;
+            at.innerHTML = highlight(full.slice(0,n), terms) + '<span class="caret"></span>';
+            if (n >= full.length){
+              clearInterval(tick);
+              at.innerHTML = highlight(full, terms);
+              $("#sourcesLabel").textContent = hits.length + " sources";
+              $("#sourcesList").innerHTML = hits.map((h,k) =>
+                `<div class="src-row" data-i="${h.i}"><span class="src-num">${k+1}</span>${badge(h.e.p)}<span class="src-sender">${h.e.from}</span><span class="src-subj">${h.e.subj}</span><span class="src-meta">${h.e.date}</span><span class="src-score">${h.sim}%</span></div>`
+              ).join("");
+              document.querySelectorAll(".src-row").forEach(r => r.addEventListener("click", () => openDrawer(+r.dataset.i)));
+              document.querySelectorAll(".cite").forEach(c => c.addEventListener("click", () => {
+                const idx = citeMap[+c.dataset.cite]; if (idx!=null) openDrawer(idx);
+              }));
+              streaming = false; $("#askBtn").disabled = false;
+            }
+          }, 12);
+        });
+      }
+
+      $("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); const q = $("#q").value.trim(); if(q) ask(q); });
+
+      // Example query chips
+      const CHIPS = [
+        "What did Stripe say about the failed payment?",
+        "Any meetings this week?",
+        "Summarize my AWS bill",
+        "Did CI pass on main?",
+        "Who reached out about recruiting?",
+        "Any production errors?",
+      ];
+      $("#chips").innerHTML = CHIPS.map(c => `<button class="chip" type="button">${c}</button>`).join("");
+      document.querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+        $("#q").value = b.textContent; ask(b.textContent);
+      }));
+
+      // ---- Connect flow (simulated OAuth + sync) ----
+      const SCOPES = {
+        gmail: ["Read your email messages and settings", "View your email address", "Read but never send or delete"],
+        outlook: ["Read your mail", "View your basic profile", "Maintain access to sync in the background"],
+      };
+      function closeModal(){ $("#modal").classList.remove("open"); }
+      $("#modalBackdrop").addEventListener("click", closeModal);
+
+      function openConnect(provider){
+        const name = provider === "gmail" ? "Google" : "Microsoft";
+        $("#modalBox").innerHTML = `
+          <div class="provider-head">${badge(provider)}<h3 style="margin:0">Connect ${provider==="gmail"?"Gmail":"Outlook"}</h3></div>
+          <p><b>Unify</b> wants to access your ${name} account. In the real app this opens ${name}'s OAuth consent screen; tokens are encrypted (AES-256-GCM) at rest.</p>
+          <ul class="scopes">${SCOPES[provider].map(s=>`<li>${s}</li>`).join("")}</ul>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancelConnect">Cancel</button>
+            <button class="btn-primary" id="allowConnect">Allow access</button>
+          </div>`;
+        $("#modal").classList.add("open");
+        $("#cancelConnect").addEventListener("click", closeModal);
+        $("#allowConnect").addEventListener("click", () => runSync(provider));
+      }
+
+      function runSync(provider){
+        const total = 500;
+        $("#modalBox").innerHTML = `
+          <div class="provider-head">${badge(provider)}<h3 style="margin:0">Syncing ${provider==="gmail"?"Gmail":"Outlook"}</h3></div>
+          <p>Fetching messages, generating embeddings, and storing vectors.</p>
+          <div class="progress"><span id="bar"></span></div>
+          <div class="sync-step" id="syncStep">Authorizing…</div>`;
+        const bar = $("#bar"); const step = $("#syncStep");
+        const seq = [
+          {p:8, t:"Authorizing… ✓"},
+          {p:40, t:`Fetching messages… ${Math.round(total*0.4)}/${total}`},
+          {p:72, t:`Embedding with text-embedding-3-small… ${Math.round(total*0.72)}/${total}`},
+          {p:96, t:`Storing vectors in pgvector… ${total}/${total}`},
+          {p:100, t:"Done ✓"},
+        ];
+        let k = 0;
+        (function next(){
+          if (k >= seq.length){
+            const existing = ACCOUNTS.find(a=>a.p===provider);
+            if (existing) existing.count += total;
+            else ACCOUNTS.push({p:provider, email: provider==="gmail"?"new@gmail.com":"new@outlook.com", count: total});
+            renderAccounts(); render();
+            closeModal();
+            toast(`${provider==="gmail"?"Gmail":"Outlook"} connected · ${total} messages synced`);
+            return;
+          }
+          bar.style.width = seq[k].p + "%";
+          step.textContent = seq[k].t;
+          k++; setTimeout(next, 480);
+        })();
+      }
+
+      function runResync(){
+        const btn = $("#resyncBtn"); const orig = btn.textContent;
+        btn.textContent = "Syncing…"; btn.disabled = true;
+        setTimeout(() => { btn.textContent = orig; btn.disabled = false; toast("Re-sync complete · 0 new messages"); }, 1100);
+      }
+
+      // Toast
+      let toastTimer;
+      function toast(msg){
+        const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+        clearTimeout(toastTimer); toastTimer = setTimeout(()=> t.classList.remove("show"), 2600);
+      }
 
       // Shortcuts
       window.addEventListener("keydown", (e) => {
         if (((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k") || (e.key==="/" && document.activeElement!==$("#q"))) { e.preventDefault(); $("#q").focus(); }
-        else if (e.key==="Escape") { if($("#drawer").classList.contains("open")) closeDrawer(); else $("#q").blur(); }
+        else if (e.key==="Escape") {
+          if ($("#modal").classList.contains("open")) closeModal();
+          else if ($("#drawer").classList.contains("open")) closeDrawer();
+          else $("#q").blur();
+        }
       });
 
+      renderAccounts();
       render();
     </script>
   </body>

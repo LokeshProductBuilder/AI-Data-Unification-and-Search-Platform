@@ -14,7 +14,7 @@ export default async function LandingPage() {
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-sm bg-accent shadow-glow" />
           <span className="font-mono text-sm font-medium tracking-tight">
-            unified
+            data unification
           </span>
         </div>
         <nav className="flex items-center gap-3 text-sm">
@@ -44,7 +44,7 @@ export default async function LandingPage() {
           <span className="text-accent-bright">all of your email.</span>
         </h1>
         <p className="mt-5 max-w-xl text-pretty text-base text-fg-muted">
-          Connect Gmail and Outlook, and Unified pulls in your messages, embeds
+          Connect Gmail and Outlook, and Data Unification pulls in your messages, embeds
           them, and lets you ask questions in plain language — answered by Claude,
           with citations to the exact emails.
         </p>

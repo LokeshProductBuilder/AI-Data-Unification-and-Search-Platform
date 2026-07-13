@@ -1,4 +1,4 @@
-# Unified — Use Cases
+# Data Unification — Use Cases
 
 Concrete scenarios the product is designed to serve, written as user stories with
 their trigger, flow, and outcome. These map directly to the requirements in the

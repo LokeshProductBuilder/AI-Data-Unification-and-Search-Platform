@@ -14,13 +14,13 @@ done and what's next.
 - [x] Semantic search: pgvector top-20 + streaming Claude answers with citations
 - [x] CI (lint, type-check, build) + Docker Compose for local Postgres
 - [x] Keyboard shortcuts for search (`/`, `⌘K`, `Esc`)
-- [x] Unit tests (Vitest, 35 tests) — `crypto`, `format`, embeddings, `env`, semantic search wiring, token refresh, and the email-detail API (incl. user scoping)
+- [x] Account settings: disconnect a mailbox and delete its emails (user-scoped, cascading)
+- [x] Unit tests (Vitest, 38 tests) — `crypto`, `format`, embeddings, `env`, semantic search wiring, token refresh, and the email APIs (detail + disconnect, incl. user scoping)
 - [x] Email detail view (slide-over drawer with full message)
 
 ## Next up
 
 - [ ] Loading skeletons + polished empty states
-- [ ] Account settings: disconnect a mailbox, delete its emails
 - [ ] Search history and saved searches
 - [ ] Incremental sync (only fetch messages newer than the last sync)
 - [ ] Highlight cited emails (`[n]`) inline in the answer

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { AccountSummary } from "@/app/api/accounts/route";
 import { ProviderBadge } from "@/components/provider-badge";
 import { formatFullDate } from "@/lib/format";
@@ -20,8 +21,10 @@ const STATUS_COLOR: Record<AccountSummary["syncStatus"], string> = {
 };
 
 export function AccountsPanel({ initial }: { initial: AccountSummary[] }) {
+  const router = useRouter();
   const [accounts, setAccounts] = useState<AccountSummary[]>(initial);
   const [resyncing, setResyncing] = useState(false);
+  const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     const res = await fetch("/api/accounts");
@@ -29,6 +32,36 @@ export function AccountsPanel({ initial }: { initial: AccountSummary[] }) {
     const data = (await res.json()) as { accounts: AccountSummary[] };
     setAccounts(data.accounts);
   }, []);
+
+  const disconnect = async (account: AccountSummary) => {
+    const detail =
+      account.emailCount > 0
+        ? ` This permanently deletes ${account.emailCount} stored email${
+            account.emailCount === 1 ? "" : "s"
+          }.`
+        : "";
+    const ok = window.confirm(
+      `Disconnect ${account.accountEmail}?${detail} This cannot be undone.`,
+    );
+    if (!ok) return;
+
+    setDisconnectingId(account.id);
+    // Optimistically drop it from the list, then reconcile with the server.
+    setAccounts((prev) => prev.filter((a) => a.id !== account.id));
+    try {
+      const res = await fetch(`/api/accounts/${account.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Disconnect failed");
+      // Refresh server components (email list + total count) too.
+      router.refresh();
+    } catch {
+      // Re-fetch to restore accurate state if the delete failed.
+      await refresh();
+    } finally {
+      setDisconnectingId(null);
+    }
+  };
 
   // Poll while any account is mid-sync so the UI reflects progress.
   useEffect(() => {
@@ -75,6 +108,15 @@ export function AccountsPanel({ initial }: { initial: AccountSummary[] }) {
               <span className="text-fg-faint"> · {a.emailCount}</span>
             )}
           </span>
+          <button
+            onClick={() => disconnect(a)}
+            disabled={disconnectingId === a.id}
+            title={`Disconnect ${a.accountEmail} and delete its emails`}
+            aria-label={`Disconnect ${a.accountEmail}`}
+            className="ml-0.5 rounded p-0.5 font-mono text-2xs text-fg-faint transition-colors hover:bg-bg-overlay hover:text-red-400 disabled:opacity-50"
+          >
+            {disconnectingId === a.id ? "…" : "✕"}
+          </button>
         </div>
       ))}
 

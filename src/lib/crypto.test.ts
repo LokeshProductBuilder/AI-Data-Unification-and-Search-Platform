@@ -14,7 +14,7 @@ describe("crypto: AES-256-GCM token encryption", () => {
 
   it("handles unicode and empty strings", () => {
     expect(decrypt(encrypt(""))).toBe("");
-    expect(decrypt(encrypt("café ☕ — 日本語"))).toBe("café ☕ — 日本語");
+    expect(decrypt(encrypt("café ☕ · 日本語"))).toBe("café ☕ · 日本語");
   });
 
   it("produces a different ciphertext each time (random IV)", () => {

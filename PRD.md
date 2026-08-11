@@ -1,4 +1,4 @@
-# Unify — Product Requirements Document
+# Unify Product Requirements Document
 
 **Status:** Living document · **Owner:** Lokesh Mallagi · **Last updated:** July 2026
 
@@ -36,7 +36,7 @@ exact words to match. Across two or three mailboxes, the problem compounds:
 ### Non-goals (for v1)
 - Sending, replying to, or composing email.
 - Full mailbox history (v1 scopes to the most recent 500 messages per account).
-- Team / shared inboxes — this is a single-user, personal tool.
+- Team / shared inboxes (this is a single-user, personal tool).
 - Mobile-native apps (responsive web only).
 
 ## 4. Target users
@@ -58,7 +58,7 @@ exact words to match. Across two or three mailboxes, the problem compounds:
 
 ## 6. Requirements
 
-### 6.1 Functional (v1 — shipped)
+### 6.1 Functional (v1, shipped)
 - **F1. Authentication.** Sign in with Google or Microsoft (Clerk).
 - **F2. Connect accounts.** OAuth connect for Gmail and Outlook; tokens stored
   encrypted; support multiple accounts.
@@ -100,10 +100,10 @@ exact words to match. Across two or three mailboxes, the problem compounds:
 
 ## 9. Risks & open questions
 
-- **Privacy & trust:** users are connecting personal email — encryption,
+- **Privacy & trust:** users are connecting personal email, so encryption,
   transparency, and easy disconnect/delete are table stakes.
 - **Cost:** embeddings + LLM calls scale with mailbox size; need batching and
   caps (v1 caps at 500 messages).
-- **Answer quality:** retrieval quality drives answer quality — how do we measure
+- **Answer quality:** retrieval quality drives answer quality, so how do we measure
   and improve ranking over time?
 - **Provider limits:** Gmail/Graph rate limits on large syncs.

@@ -14,7 +14,7 @@ Rules:
 - Answer the question directly and concisely using ONLY the provided emails.
 - Cite the emails you use inline with bracketed numbers like [1], [3] that match the email indices.
 - When relevant, mention the sender and date in prose.
-- If the provided emails do not contain the answer, say so plainly — do not invent details.
+- If the provided emails do not contain the answer, say so plainly. Do not invent details.
 - Be specific. Synthesize across multiple emails when useful.`;
 
 function buildContext(

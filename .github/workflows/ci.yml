@@ -11,7 +11,7 @@ jobs:
     name: Lint, type-check & build
     runs-on: ubuntu-latest
 
-    # Placeholder values — the build only needs these to be present, it never
+    # Placeholder values. The build only needs these to be present, it never
     # connects to a real database or external service during CI.
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/unified

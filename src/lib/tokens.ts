@@ -24,7 +24,7 @@ export async function getValidAccessToken(
   }
 
   if (!refreshToken) {
-    // No way to refresh — fall back to whatever we have and let the API fail.
+    // No way to refresh, so fall back to whatever we have and let the API fail.
     return { accessToken: decrypt(account.accessToken), refreshToken };
   }
 

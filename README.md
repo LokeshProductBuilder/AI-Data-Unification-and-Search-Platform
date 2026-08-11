@@ -10,6 +10,7 @@ A personal data platform. Connect Gmail and Outlook, pull your email, and search
 
 ## Product docs
 
+- [**Case study**](docs/case-study.md) — the problem, product decisions & tradeoffs, and what I'd measure next.
 - [**Product Requirements Document (PRD)**](PRD.md) — problem, users, goals, requirements, success metrics, and phasing.
 - [**Use cases**](docs/use-cases.md) — user stories, flows, and the edge cases considered.
 - [**Roadmap**](ROADMAP.md) — what's shipped and what's next.

@@ -39,6 +39,7 @@ A personal data platform. Connect Gmail and Outlook, pull your email, and search
 4. **Search** — type a question; we embed it, run a pgvector top-20 similarity search, and
    stream a Claude answer that cites which emails it used.
 5. **Browse** — a dense, date-sorted list of every email with a Gmail/Outlook badge.
+6. **Manage** — disconnect a mailbox at any time, which deletes its stored emails.
 
 ## Project structure
 
@@ -121,9 +122,12 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ## Testing
 
-Unit tests run with [Vitest](https://vitest.dev) and cover the security- and
-correctness-critical pure functions (AES-256-GCM token encryption, date/sender
-formatting, and pgvector serialization):
+Unit tests run with [Vitest](https://vitest.dev) — 38 tests covering the
+security- and correctness-critical paths: AES-256-GCM token encryption, env
+validation, date/sender formatting, embedding + pgvector serialization,
+semantic-search query wiring, OAuth token refresh, and the email APIs (message
+detail + account disconnect), including user-scoping checks that prevent
+cross-account reads or deletes:
 
 ```bash
 npm test          # run once

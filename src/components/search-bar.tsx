@@ -106,7 +106,7 @@ export function SearchBar() {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask anything about your email — “what did Stripe say about the failed payment?”"
+            placeholder="Ask anything about your email: “what did Stripe say about the failed payment?”"
             className="min-w-0 flex-1 bg-transparent text-sm text-fg placeholder:text-fg-faint focus:outline-none"
             autoComplete="off"
           />

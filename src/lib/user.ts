@@ -38,7 +38,7 @@ export async function syncCurrentUser(): Promise<User | null> {
   });
 }
 
-/** Return the local User id, or throw — for use inside protected routes. */
+/** Return the local User id, or throw. For use inside protected routes. */
 export async function requireUserId(): Promise<string> {
   const user = await syncCurrentUser();
   if (!user) throw new Error("Not authenticated");

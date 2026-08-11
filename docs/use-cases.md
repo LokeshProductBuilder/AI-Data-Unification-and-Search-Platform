@@ -1,4 +1,4 @@
-# Unify — Use Cases
+# Unify Use Cases
 
 Concrete scenarios the product is designed to serve, written as user stories with
 their trigger, flow, and outcome. These map directly to the requirements in the
@@ -46,7 +46,7 @@ their trigger, flow, and outcome. These map directly to the requirements in the
 **Flow:**
 1. User reads the cited numbers in the answer.
 2. Clicks a source in the list (or an email row).
-3. The detail drawer opens with the full message — sender, recipients, date, body.
+3. The detail drawer opens with the full message: sender, recipients, date, body.
 
 **Outcome:** The user trusts the answer because they can see the receipts.
 **Requirements:** F4, F5.

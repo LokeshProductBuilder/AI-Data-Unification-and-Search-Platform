@@ -15,7 +15,7 @@ done and what's next.
 - [x] CI (lint, type-check, build) + Docker Compose for local Postgres
 - [x] Keyboard shortcuts for search (`/`, `⌘K`, `Esc`)
 - [x] Account settings: disconnect a mailbox and delete its emails (user-scoped, cascading)
-- [x] Unit tests (Vitest, 38 tests) — `crypto`, `format`, embeddings, `env`, semantic search wiring, token refresh, and the email APIs (detail + disconnect, incl. user scoping)
+- [x] Unit tests (Vitest, 38 tests): `crypto`, `format`, embeddings, `env`, semantic search wiring, token refresh, and the email APIs (detail + disconnect, incl. user scoping)
 - [x] Email detail view (slide-over drawer with full message)
 
 ## Next up

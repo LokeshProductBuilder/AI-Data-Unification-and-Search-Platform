@@ -6,16 +6,16 @@
 
 A personal data platform. Connect Gmail and Outlook, pull your email, and search it with natural language powered by Claude.
 
-**[▶ Try the interactive demo](https://lokeshproductbuilder.github.io/AI-Data-Unification-and-Search-Platform/)** — a clickable front-end prototype with sample data (no sign-in required). The full stack (auth, OAuth, embeddings, vector search, streaming answers) lives in this repo.
+**[▶ Try the interactive demo](https://lokeshproductbuilder.github.io/AI-Data-Unification-and-Search-Platform/)**. A clickable front-end prototype with sample data (no sign-in required). The full stack (auth, OAuth, embeddings, vector search, streaming answers) lives in this repo.
 
 ## Product docs
 
-- [**Case study**](docs/case-study.md) — the problem, product decisions & tradeoffs, and what I'd measure next.
-- [**Product Requirements Document (PRD)**](PRD.md) — problem, users, goals, requirements, success metrics, and phasing.
-- [**Use cases**](docs/use-cases.md) — user stories, flows, and the edge cases considered.
-- [**Roadmap**](ROADMAP.md) — what's shipped and what's next.
+- [**Case study**](docs/case-study.md): the problem, product decisions and tradeoffs, and what I'd measure next.
+- [**Product Requirements Document (PRD)**](PRD.md): problem, users, goals, requirements, success metrics, and phasing.
+- [**Use cases**](docs/use-cases.md): user stories, flows, and the edge cases considered.
+- [**Roadmap**](ROADMAP.md): what's shipped and what's next.
 
-![Unify dashboard — AI search over Gmail + Outlook with cited sources](docs/dashboard.png)
+![Unify dashboard: AI search over Gmail + Outlook with cited sources](docs/dashboard.png)
 
 > _Dashboard UI with sample data: a natural-language question is embedded, matched against your emails with a pgvector similarity search, and answered by Claude with citations back to the specific messages._
 
@@ -35,12 +35,12 @@ A personal data platform. Connect Gmail and Outlook, pull your email, and search
 ## What it does
 
 1. **Sign in** with Google or Microsoft via Clerk.
-2. **Connect an account** — OAuth grants mailbox access; tokens are encrypted at rest.
-3. **Sync** — an Inngest job fetches your last 500 emails, embeds each, and stores them.
-4. **Search** — type a question; we embed it, run a pgvector top-20 similarity search, and
+2. **Connect an account**: OAuth grants mailbox access; tokens are encrypted at rest.
+3. **Sync**: an Inngest job fetches your last 500 emails, embeds each, and stores them.
+4. **Search**: type a question; we embed it, run a pgvector top-20 similarity search, and
    stream a Claude answer that cites which emails it used.
-5. **Browse** — a dense, date-sorted list of every email with a Gmail/Outlook badge.
-6. **Manage** — disconnect a mailbox at any time, which deletes its stored emails.
+5. **Browse**: a dense, date-sorted list of every email with a Gmail/Outlook badge.
+6. **Manage**: disconnect a mailbox at any time, which deletes its stored emails.
 
 ## Project structure
 
@@ -123,7 +123,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ## Testing
 
-Unit tests run with [Vitest](https://vitest.dev) — 38 tests covering the
+Unit tests run with [Vitest](https://vitest.dev), 38 tests covering the
 security- and correctness-critical paths: AES-256-GCM token encryption, env
 validation, date/sender formatting, embedding + pgvector serialization,
 semantic-search query wiring, OAuth token refresh, and the email APIs (message

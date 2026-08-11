@@ -45,7 +45,7 @@ export default async function LandingPage() {
         </h1>
         <p className="mt-5 max-w-xl text-pretty text-base text-fg-muted">
           Connect Gmail and Outlook, and Unify pulls in your messages, embeds
-          them, and lets you ask questions in plain language — answered by Claude,
+          them, and lets you ask questions in plain language, answered by Claude,
           with citations to the exact emails.
         </p>
         <div className="mt-8 flex items-center gap-3">

@@ -7,9 +7,17 @@ import { storeEmails } from "@/lib/email-store";
 
 const MAX_EMAILS = 500;
 
+// Re-fetch a small window before the last cursor to absorb clock skew. Upserts
+// are keyed on (accountId, externalId), so any overlap is deduplicated.
+const SYNC_OVERLAP_MS = 60_000;
+
 /**
- * Sync a single mailbox: fetch the last 500 messages, embed them, and store
- * them with their vectors. Triggered when an account is connected.
+ * Sync a single mailbox, then embed and store the messages with their vectors.
+ * Triggered when an account is connected or a re-sync is requested.
+ *
+ * The first sync for an account is a full backfill (up to 500 messages).
+ * Afterwards we only fetch mail newer than `lastSyncedAt`, which keeps re-syncs
+ * cheap in both API calls and embedding cost.
  *
  * Note: each step's return value is JSON-serialised by Inngest, so we reload
  * the account (with real Date objects) inside the fetch step rather than
@@ -34,36 +42,53 @@ export const syncMailbox = inngest.createFunction(
     });
 
     try {
-      const count = await step.run("fetch-embed-store", async () => {
+      const result = await step.run("fetch-embed-store", async () => {
+        // Capture the cursor before fetching so mail that arrives mid-sync is
+        // still picked up on the next run.
+        const cursor = new Date().toISOString();
+
         const account = await prisma.connectedAccount.findUnique({
           where: { id: accountId },
         });
         if (!account) throw new Error(`Account ${accountId} not found`);
+
+        const since = account.lastSyncedAt
+          ? new Date(account.lastSyncedAt.getTime() - SYNC_OVERLAP_MS)
+          : null;
 
         const { accessToken, refreshToken } =
           await getValidAccessToken(account);
 
         const emails =
           account.provider === "GMAIL"
-            ? await gmailFetchRecent(accessToken, refreshToken, MAX_EMAILS)
-            : await outlookFetchRecent(accessToken, MAX_EMAILS);
+            ? await gmailFetchRecent(accessToken, refreshToken, MAX_EMAILS, since)
+            : await outlookFetchRecent(accessToken, MAX_EMAILS, since);
 
-        return storeEmails(
+        const stored = await storeEmails(
           account.userId,
           account.id,
           account.provider,
           emails,
         );
+
+        return { stored, cursor, incremental: since !== null };
       });
 
       await step.run("mark-complete", async () => {
         await prisma.connectedAccount.update({
           where: { id: accountId },
-          data: { syncStatus: "COMPLETED", lastSyncedAt: new Date() },
+          data: {
+            syncStatus: "COMPLETED",
+            lastSyncedAt: new Date(result.cursor),
+          },
         });
       });
 
-      return { accountId, emailsStored: count };
+      return {
+        accountId,
+        emailsStored: result.stored,
+        incremental: result.incremental,
+      };
     } catch (err) {
       await step.run("mark-failed", async () => {
         await prisma.connectedAccount.update({

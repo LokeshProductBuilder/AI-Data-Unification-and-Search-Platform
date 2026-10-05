@@ -130,15 +130,31 @@ function stripHtml(text: string): string {
     .trim();
 }
 
+/**
+ * Build the Graph `/me/messages` path. When `since` is given we add a
+ * `receivedDateTime gt` filter so incremental syncs only pull new mail.
+ */
+export function outlookMessagesPath(select: string, since?: Date | null): string {
+  const params = [
+    "$top=50",
+    "$orderby=receivedDateTime desc",
+    `$select=${select}`,
+  ];
+  if (since) {
+    params.push(`$filter=receivedDateTime gt ${since.toISOString()}`);
+  }
+  return `/me/messages?${params.join("&")}`;
+}
+
 export async function outlookFetchRecent(
   accessToken: string,
   max = 500,
+  since?: Date | null,
 ): Promise<NormalizedEmail[]> {
   const out: NormalizedEmail[] = [];
   const select =
     "id,conversationId,subject,bodyPreview,body,from,toRecipients,receivedDateTime,isRead,categories";
-  let next: string | null =
-    `/me/messages?$top=50&$orderby=receivedDateTime desc&$select=${select}`;
+  let next: string | null = outlookMessagesPath(select, since);
 
   while (next && out.length < max) {
     const page: GraphListResponse = next.startsWith("http")

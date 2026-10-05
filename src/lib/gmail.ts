@@ -113,15 +113,30 @@ function stripHtml(text: string): string {
 }
 
 /**
+ * Build the Gmail search query. When `since` is given we limit the results to
+ * messages received after it (Gmail's `after:` takes a Unix timestamp), which
+ * is what makes incremental syncs cheap.
+ */
+export function gmailSearchQuery(since?: Date | null): string {
+  const base = "in:inbox OR in:sent";
+  if (!since) return base;
+  const afterSeconds = Math.floor(since.getTime() / 1000);
+  return `(${base}) after:${afterSeconds}`;
+}
+
+/**
  * Fetch up to `max` of the most recent messages, fully normalised.
  * Uses list + batched get; Gmail has no bulk get, so we parallelise in chunks.
+ * Pass `since` to fetch only messages newer than a previous sync.
  */
 export async function gmailFetchRecent(
   accessToken: string,
   refreshToken: string | null,
   max = 500,
+  since?: Date | null,
 ): Promise<NormalizedEmail[]> {
   const gmail = gmailClientFor(accessToken, refreshToken);
+  const q = gmailSearchQuery(since);
 
   // 1. Collect message ids (paginated, newest first).
   const ids: string[] = [];
@@ -131,7 +146,7 @@ export async function gmailFetchRecent(
       userId: "me",
       maxResults: Math.min(100, max - ids.length),
       pageToken,
-      q: "in:inbox OR in:sent",
+      q,
     });
     for (const m of res.data.messages ?? []) {
       if (m.id) ids.push(m.id);

@@ -123,12 +123,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ## Testing
 
-Unit tests run with [Vitest](https://vitest.dev), 38 tests covering the
+Unit tests run with [Vitest](https://vitest.dev), 44 tests covering the
 security- and correctness-critical paths: AES-256-GCM token encryption, env
 validation, date/sender formatting, embedding + pgvector serialization,
-semantic-search query wiring, OAuth token refresh, and the email APIs (message
-detail + account disconnect), including user-scoping checks that prevent
-cross-account reads or deletes:
+semantic-search query wiring, OAuth token refresh, incremental-sync query
+building (Gmail + Graph), and the email APIs (message detail + account
+disconnect), including user-scoping checks that prevent cross-account reads or
+deletes:
 
 ```bash
 npm test          # run once

@@ -105,7 +105,7 @@ account settings that let a user disconnect a mailbox and delete its stored data
 ## Results and honest status
 
 The application works from end to end, and there is a clickable demo that shows the full
-experience. On the engineering side I held a real quality bar: 38 unit tests, including the
+experience. On the engineering side I held a real quality bar: 44 unit tests, including the
 security-critical paths like token encryption and per-user data scoping, plus type
 checking, linting, and a production build, all of which run in CI on every push.
 
@@ -118,13 +118,14 @@ representation of the product thinking and the engineering, which is what I want
 
 ## What I would do next
 
-If I kept going, my first move would be to instrument activation and answer trust as the
-two headline signals, and then use the cited-source open rate to decide whether the
-retrieval ranking needs work, since retrieval quality is what ultimately drives answer
-quality. After that I would add incremental sync, so that a re-sync only fetches messages
-newer than the last cursor instead of re-pulling everything, which directly reduces cost
-and time. Further out, the more interesting direction is beyond email entirely. The longer
-thesis behind Unify is that a person's scattered data, across email, calendar, files, and
+Since writing the first version of this, I shipped one of the items I had flagged:
+incremental sync. After the first backfill, a re-sync now only fetches mail newer than the
+last cursor instead of re-pulling everything, which was the obvious lever for cutting cost
+and time. My next move would be to instrument activation and answer trust as the two
+headline signals, and then use the cited-source open rate to decide whether the retrieval
+ranking needs work, since retrieval quality is what ultimately drives answer quality.
+Further out, the more interesting direction is beyond email entirely. The longer thesis
+behind Unify is that a person's scattered data, across email, calendar, files, and
 messages, should be queryable as a single corpus, and email is just the first and messiest
 surface to prove it on.
 
